@@ -20,9 +20,10 @@ data "aws_iam_instance_profile" "lab" {
 }
 
 resource "aws_launch_template" "app" {
-  name_prefix   = "${var.name_prefix}-lt-"
-  image_id      = data.aws_ami.amazon_linux.id
-  instance_type = var.instance_type
+  name_prefix           = "${var.name_prefix}-lt-"
+  image_id              = data.aws_ami.amazon_linux.id
+  instance_type         = var.instance_type
+  update_default_version = true
 
   vpc_security_group_ids = [var.ec2_sg_id]
 
