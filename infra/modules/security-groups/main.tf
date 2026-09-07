@@ -29,7 +29,9 @@ resource "aws_security_group" "alb" {
 # Session Manager is used for administration, so no inbound SSH is required.
 resource "aws_security_group" "ec2" {
   name        = "${var.name_prefix}-sg-ec2"
-  description = "Allow HTTP only from the ALB"
+  # Keep the existing description so removing SSH does not force replacement
+  # of a security group still attached to the current ASG instances.
+  description = "Allow HTTP only from the ALB, SSH only from within the VPC"
   vpc_id      = var.vpc_id
 
   ingress {
