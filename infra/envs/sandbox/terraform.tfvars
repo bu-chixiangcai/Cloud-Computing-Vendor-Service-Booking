@@ -3,4 +3,5 @@
 # the assignment-{resource} sandbox configuration.
 aws_region     = "us-east-1"
 name_prefix    = "assignment"
+instance_type  = "t3.small"
 s3_bucket_name = "assignment-s3-uploads-new"

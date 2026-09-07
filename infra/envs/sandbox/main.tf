@@ -6,6 +6,34 @@ resource "random_password" "db" {
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
+resource "aws_sns_topic" "alerts" {
+  name = "${var.name_prefix}-alerts"
+
+  tags = {
+    Name = "${var.name_prefix}-alerts"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "asg_cpu_high" {
+  alarm_name          = "${var.name_prefix}-asg-cpu-high"
+  alarm_description   = "ASG average CPU is high; review capacity and traffic."
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 2
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 300
+  statistic           = "Average"
+  threshold           = var.cpu_alarm_threshold
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    AutoScalingGroupName = module.asg.asg_name
+  }
+
+  alarm_actions = [aws_sns_topic.alerts.arn]
+  ok_actions    = [aws_sns_topic.alerts.arn]
+}
+
 # Used to make the S3 bucket name globally unique (S3 bucket names are global
 # across every AWS account) while keeping the assignment- prefix convention.
 data "aws_caller_identity" "current" {}

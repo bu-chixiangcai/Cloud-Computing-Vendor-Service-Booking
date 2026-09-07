@@ -32,7 +32,7 @@ variable "private_subnet_cidrs" {
 }
 
 variable "instance_type" {
-  description = "EC2 instance type for app servers. Bump this later if t3.micro is insufficient - no other changes needed."
+  description = "EC2 instance type for app servers."
   type        = string
   default     = "t3.micro"
 }
@@ -90,4 +90,10 @@ variable "asg_max_size" {
 variable "asg_desired_capacity" {
   type    = number
   default = 2
+}
+
+variable "cpu_alarm_threshold" {
+  description = "Average ASG CPU percentage that triggers the CloudWatch alarm."
+  type        = number
+  default     = 80
 }

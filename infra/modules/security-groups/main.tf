@@ -25,12 +25,11 @@ resource "aws_security_group" "alb" {
   }
 }
 
-# assignment-sg-ec2: app instances only ever accept HTTP from the ALB. SSH is
-# scoped to the VPC CIDR only (instances have no public IP, so this only matters
-# for same-VPC tooling); SSM Session Manager is the primary shell access path.
+# assignment-sg-ec2: app instances only ever accept HTTP from the ALB. SSM
+# Session Manager is used for administration, so no inbound SSH is required.
 resource "aws_security_group" "ec2" {
   name        = "${var.name_prefix}-sg-ec2"
-  description = "Allow HTTP only from the ALB, SSH only from within the VPC"
+  description = "Allow HTTP only from the ALB"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -39,14 +38,6 @@ resource "aws_security_group" "ec2" {
     to_port         = 80
     protocol        = "tcp"
     security_groups = [aws_security_group.alb.id]
-  }
-
-  ingress {
-    description = "SSH from within the VPC only"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.vpc_cidr]
   }
 
   egress {
