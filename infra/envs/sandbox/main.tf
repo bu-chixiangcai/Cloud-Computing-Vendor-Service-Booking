@@ -45,9 +45,9 @@ module "rds" {
   rds_sg_id          = module.security_groups.rds_sg_id
   # Keep the existing RDS initial database name so changing the application
   # schema name does not replace the live database instance.
-  db_name            = "event_ticketing_db"
-  db_username        = var.db_username
-  db_password        = random_password.db.result
+  db_name     = "event_ticketing_db"
+  db_username = var.db_username
+  db_password = random_password.db.result
 }
 
 module "secrets" {
