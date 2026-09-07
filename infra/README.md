@@ -260,12 +260,12 @@ running any workflow:
 | NAT for outbound EC2 traffic | **Single NAT Gateway** (`assignment-nat`) |
 | IAM role/instance profile | `LabInstanceProfile` / underlying role `LabRole` — both referenced via Terraform `data` sources, never created |
 | DB secrets | **Secrets Manager** (`assignment-db-credentials`), with an inline policy granted on `LabRole` (see §2) |
-| EC2/ASG instance size | `t3.micro` — change `instance_type` in [`infra/envs/sandbox/variables.tf`](envs/sandbox/variables.tf) (or `terraform.tfvars`) to resize later; no other changes needed |
+| EC2/ASG instance size | `t3.small` — selected to provide a better margin for PHP/Apache startup and load testing while remaining cost-conscious |
 | GitHub Actions triggers | `workflow_dispatch` only, on all four workflows — no auto-run on push. `ci.yml` is the day-to-day entry point; `build.yml`/`deploy.yml` double as reusable workflows it calls |
 
 ## 8. Cost & cleanup notes
 
-- Main hourly costs: ALB (~$0.0225/hr + LCU), NAT Gateway (~$0.045/hr + data), 2x `t3.micro` EC2
+- Main hourly costs: ALB (~$0.0225/hr + LCU), NAT Gateway (~$0.045/hr + data), 2x `t3.small` EC2
   (~$0.0104/hr each), `db.t3.micro` RDS (~$0.017/hr) — all well within the $50 cap for short, active work
   sessions, but **run `build.yml` with `action: destroy` (or `terraform destroy` locally) when not actively
   working** to stop the meter between sessions.

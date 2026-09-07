@@ -60,7 +60,7 @@ resource "aws_autoscaling_group" "app" {
   max_size            = var.max_size
   desired_capacity    = var.desired_capacity
   health_check_type   = "ELB"
-  # Generous grace period: on a t3.micro, user-data runs dnf update + installs
+  # Generous grace period: on a t3.small, user-data runs dnf update + installs
   # httpd/php/mariadb and pulls the app artifact from S3 before Apache serves
   # healthz.php - a shorter window risks the ASG killing the instance mid-boot
   # and looping. 300s comfortably covers a cold boot.
