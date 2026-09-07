@@ -43,7 +43,9 @@ module "rds" {
   name_prefix        = var.name_prefix
   private_subnet_ids = module.vpc.private_subnet_ids
   rds_sg_id          = module.security_groups.rds_sg_id
-  db_name            = var.db_name
+  # Keep the existing RDS initial database name so changing the application
+  # schema name does not replace the live database instance.
+  db_name            = "event_ticketing_db"
   db_username        = var.db_username
   db_password        = random_password.db.result
 }

@@ -8,12 +8,13 @@
 # below with your own unique one (e.g. assignment-tfstate-<your-account-id>) and
 # create it with that same name in the bootstrap step. The DynamoDB lock table
 # name is only account-scoped, so "assignment-tf-lock" is fine as-is.
+
 terraform {
   backend "s3" {
-    bucket         = "assignment-tfstate-561758157329" # <-- change to a globally-unique name
+    bucket         = "assignment-tfstate-415664541866"
     key            = "sandbox/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "assignment-tf-lock"
+    use_lockfile   = true
     encrypt        = true
   }
 }
