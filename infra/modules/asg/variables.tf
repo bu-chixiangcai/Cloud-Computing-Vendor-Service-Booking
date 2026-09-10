@@ -78,3 +78,8 @@ variable "cpu_target_value" {
   type        = number
   default     = 60
 }
+
+variable "public_subnet_ids" {
+  type        = list(string)
+  description = "List of public subnet IDs for the ASG"
+}
