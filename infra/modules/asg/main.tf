@@ -30,7 +30,11 @@ resource "aws_launch_template" "app" {
   instance_type         = var.instance_type
   update_default_version = true
 
-  vpc_security_group_ids = [var.ec2_sg_id]
+  # Set up network interfaces to assign public IPs and bind your security group
+  network_interfaces {
+    associate_public_ip_address = true
+    security_groups             = [var.ec2_sg_id]
+  }
 
   iam_instance_profile {
     arn = data.aws_iam_instance_profile.lab.arn
@@ -61,11 +65,13 @@ resource "aws_launch_template" "app" {
 resource "aws_autoscaling_group" "app" {
   name = "${var.name_prefix}-asg"
 
-  vpc_zone_identifier = var.private_subnet_ids
+  # Changed from private to public subnets so instances can communicate with SSM
+  vpc_zone_identifier = var.public_subnet_ids
   min_size            = var.min_size
   max_size            = var.max_size
   desired_capacity    = var.desired_capacity
   health_check_type   = "ELB"
+  
   # Generous grace period: on a t3.small, user-data runs dnf update + installs
   # httpd/php/mariadb and pulls the app artifact from S3 before Apache serves
   # healthz.php - a shorter window risks the ASG killing the instance mid-boot
