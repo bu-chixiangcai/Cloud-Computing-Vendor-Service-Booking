@@ -1,7 +1,9 @@
 <?php
-// Lightweight target for an ALB health check. config.php already sends a
-// 500 status and stops here if the database is unreachable, so reaching
-// this line at all means the app can actually serve requests.
-require 'config.php';
+// Lightweight target for an ALB target group health check.
+// Confirms that Apache and PHP are running and able to serve HTTP requests.
+// Kept independent of database connectivity so temporary DB maintenance,
+// initialization, or schema migrations do not trigger an ASG termination loop.
+http_response_code(200);
 header('Content-Type: text/plain');
 echo 'OK';
+

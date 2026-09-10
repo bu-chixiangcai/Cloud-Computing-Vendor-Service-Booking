@@ -4,12 +4,17 @@ data "aws_ami" "amazon_linux" {
 
   filter {
     name   = "name"
-    values = ["al2023-ami-*-x86_64"]
+    values = ["al2023-ami-2023.*-x86_64"]
   }
 
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
   }
 }
 
@@ -28,7 +33,7 @@ resource "aws_launch_template" "app" {
   vpc_security_group_ids = [var.ec2_sg_id]
 
   iam_instance_profile {
-    name = data.aws_iam_instance_profile.lab.name
+    arn = data.aws_iam_instance_profile.lab.arn
   }
 
   # Bootstraps Apache/PHP and the DB env vars from Secrets Manager. The actual

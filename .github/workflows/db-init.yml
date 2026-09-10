@@ -57,14 +57,28 @@ jobs:
         run: |
           set -euo pipefail
 
-          INSTANCE_ID=$(aws ec2 describe-instances \
+          # Find a running instance that is also Online in SSM
+          RUNNING_IDS=$(aws ec2 describe-instances \
             --filters "Name=tag:App,Values=${{ env.APP_TAG }},vendor-services-booking" "Name=instance-state-name,Values=running" \
-            --query "Reservations[0].Instances[0].InstanceId" --output text)
+            --query "Reservations[].Instances[].InstanceId" --output text)
 
-          if [ -z "$INSTANCE_ID" ] || [ "$INSTANCE_ID" == "None" ]; then
-            echo "No running app instance found - apply infra and wait for at least one healthy instance first."
+          ONLINE_SSM_IDS=$(aws ssm describe-instance-information \
+            --query "InstanceInformationList[?PingStatus=='Online'].InstanceId" --output text 2>/dev/null || echo "")
+
+          INSTANCE_ID=""
+          for id in $RUNNING_IDS; do
+            if echo " $ONLINE_SSM_IDS " | grep -q " $id "; then
+              INSTANCE_ID="$id"
+              break
+            fi
+          done
+
+          if [ -z "$INSTANCE_ID" ]; then
+            echo "No running, SSM-online app instance found - ensure instances are healthy and registered in SSM."
             exit 1
           fi
+
+          echo "Selected online instance for db seed: $INSTANCE_ID"
 
           COMMAND_ID=$(aws ssm send-command \
             --document-name "AWS-RunShellScript" \
