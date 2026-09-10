@@ -104,6 +104,7 @@ module "asg" {
 
   name_prefix           = var.name_prefix
   vpc_id                = module.vpc.vpc_id
+  public_subnet_ids     = module.vpc.public_subnet_ids
   private_subnet_ids    = module.vpc.private_subnet_ids
   ec2_sg_id             = module.security_groups.ec2_sg_id
   target_group_arn      = module.alb.target_group_arn
