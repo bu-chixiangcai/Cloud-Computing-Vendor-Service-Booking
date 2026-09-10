@@ -20,7 +20,7 @@ DB_PASS=$(echo "$SECRET_JSON" | jq -r .password)
 DB_NAME=$(echo "$SECRET_JSON" | jq -r .dbname)
 
 # Ensure application database exists so initial connections don't fail
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;" || true
+mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -e "CREATE DATABASE IF NOT EXISTS \`$DB_NAME\`;" || true
 
 cat <<EOF > /etc/httpd/conf.d/assignment-env.conf
 SetEnv DB_HOST "$DB_HOST"
