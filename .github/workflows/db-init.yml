@@ -34,7 +34,7 @@ jobs:
       # Resolve the bucket name from Terraform state rather than hardcoding it,
       # so it stays in sync with the account-ID-suffixed name Terraform created.
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: "1.9.0"
 
