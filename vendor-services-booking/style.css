@@ -74,10 +74,9 @@ body {
 .brand-logo {
   height: 30px;
   width: auto;
-  display: block;
-  background: #fff;
-  border-radius: 4px;
-  padding: 2px 4px;
+  max-width: 100%;
+  display: inline-block;
+  object-fit: contain;
 }
 
 .nav-links {
@@ -259,12 +258,11 @@ h2::before {
 .card-thumb {
   display: block;
   width: 100%;
-  height: 140px;
+  height: 180px;           /* Minimum height so container doesn't collapse */
   object-fit: cover;
-  background: var(--accent-soft);
+  background-color: #f7f9f9; /* Fallback gray box if image fails */
   border-radius: var(--radius-sm);
   margin-bottom: 14px;
-  cursor: zoom-in;
 }
 
 .table-thumb {
@@ -273,7 +271,7 @@ h2::before {
   height: 48px;
   object-fit: cover;
   border-radius: var(--radius-sm);
-  cursor: zoom-in;
+  background-color: #f7f9f9;
 }
 
 .card .btn, .card a.btn { margin-top: 14px; }
